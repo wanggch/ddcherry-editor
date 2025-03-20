@@ -1,0 +1,40 @@
+{
+  "name": "wechat-markdown-editor",
+  "private": true,
+  "version": "0.1.0",
+  "description": "一个适用于微信公众号的Markdown编辑器，支持多主题和HTML导出",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@babel/core": "^7.26.10",
+    "@codemirror/commands": "^6.8.0",
+    "@codemirror/lang-markdown": "^6.3.2",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@codemirror/view": "^6.36.4",
+    "@element-plus/icons-vue": "^2.3.1",
+    "clipboard-copy": "^4.0.1",
+    "codemirror": "6",
+    "element-plus": "^2.9.6",
+    "highlight.js": "^11.11.1",
+    "markdown-it": "^14.1.0",
+    "mermaid": "^11.5.0",
+    "pinia": "^3.0.1",
+    "vue": "^3.5.13",
+    "vue-codemirror": "^6.1.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "3.3.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vue-tsc": "^2.2.4"
+  }
+}
