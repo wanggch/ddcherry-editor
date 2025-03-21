@@ -2,6 +2,10 @@
   <div class="markdown-editor">
     <Toolbar @format="handleFormat" />
     <div class="editor-content">
+      <!-- <div class="editor-header">
+        <Icon icon="mdi:pencil" class="editor-icon" />
+        <span class="editor-title">编辑</span>
+      </div> -->
       <Codemirror
         :value="modelValue"
         :style="{ fontSize: `${fontSize}px` }"
@@ -25,6 +29,7 @@ import { EditorState } from '@codemirror/state'
 import { undo, redo } from '@codemirror/commands'
 import { useEditorStore } from '../stores/editor'
 import Toolbar from './Toolbar.vue'
+import { Icon } from '@iconify/vue'
 
 const props = defineProps({
   modelValue: {
@@ -175,7 +180,21 @@ onMounted(() => {
 }
 
 .editor-content {
-  @apply flex-1 overflow-hidden;
+  @apply flex-1 overflow-hidden flex flex-col;
+}
+
+.editor-header {
+  @apply flex items-center px-4 py-2 border-b border-gray-200 bg-gray-50;
+}
+
+.editor-icon {
+  @apply text-lg mr-2;
+  color: var(--primary-color);
+}
+
+.editor-title {
+  @apply font-medium text-sm;
+  color: var(--text-color);
 }
 
 :deep(.cm-editor) {

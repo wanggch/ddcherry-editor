@@ -3,20 +3,25 @@
     v-model="drawerVisible"
     title="编辑器设置"
     direction="rtl"
-    size="400px"
+    size="380px"
+    :show-close="true"
+    class="settings-drawer"
   >
     <div class="settings-content">
       <!-- 主题设置 -->
       <div class="setting-section">
-        <h3 class="section-title">主题设置</h3>
+        <div class="section-header">
+          <Icon icon="mdi:palette-outline" class="section-icon" />
+          <h3 class="section-title">主题设置</h3>
+        </div>
         
         <div class="setting-item">
-          <div class="setting-label">主题</div>
+          <div class="setting-label">主题选择</div>
           <el-radio-group v-model="themeSettings.theme" class="theme-select">
-            <el-radio label="default">默认主题</el-radio>
-            <el-radio label="elegant">优雅主题</el-radio>
-            <el-radio label="tech">科技主题</el-radio>
-            <el-radio label="dark">暗黑主题</el-radio>
+            <el-radio-button label="default">默认主题</el-radio-button>
+            <el-radio-button label="elegant">优雅主题</el-radio-button>
+            <el-radio-button label="tech">科技主题</el-radio-button>
+            <el-radio-button label="dark">暗黑主题</el-radio-button>
           </el-radio-group>
         </div>
         
@@ -33,80 +38,102 @@
       
       <!-- 字体与排版 -->
       <div class="setting-section">
-        <h3 class="section-title">字体与排版</h3>
+        <div class="section-header">
+          <Icon icon="mdi:format-font" class="section-icon" />
+          <h3 class="section-title">字体与排版</h3>
+        </div>
         
-        <div class="setting-item">
-          <div class="setting-label">字体大小</div>
+        <div class="setting-item compact">
+          <div class="setting-label-group">
+            <div class="setting-label">字体大小</div>
+            <div class="setting-value">{{ fontSettings.fontSize }}px</div>
+          </div>
           <el-slider 
             v-model="fontSettings.fontSize"
             :min="12" 
             :max="24" 
             :step="1" 
-            show-input
           ></el-slider>
         </div>
         
-        <div class="setting-item">
-          <div class="setting-label">行高</div>
+        <div class="setting-item compact">
+          <div class="setting-label-group">
+            <div class="setting-label">行高</div>
+            <div class="setting-value">{{ fontSettings.lineHeight }}</div>
+          </div>
           <el-slider 
             v-model="fontSettings.lineHeight"
             :min="1"
             :max="2.5"
             :step="0.1" 
-            show-input
           ></el-slider>
         </div>
         
-        <div class="setting-item">
-          <div class="setting-label">段落间距</div>
+        <div class="setting-item compact">
+          <div class="setting-label-group">
+            <div class="setting-label">段落间距</div>
+            <div class="setting-value">{{ fontSettings.paragraphSpacing }}</div>
+          </div>
           <el-slider 
             v-model="fontSettings.paragraphSpacing"
             :min="0.5"
             :max="3"
             :step="0.1"
-            show-input
           ></el-slider>
         </div>
       </div>
       
       <!-- 图片设置 -->
       <div class="setting-section">
-        <h3 class="section-title">图片设置</h3>
+        <div class="section-header">
+          <Icon icon="mdi:image-outline" class="section-icon" />
+          <h3 class="section-title">图片设置</h3>
+        </div>
         
         <div class="setting-item">
           <div class="setting-label">图片对齐方式</div>
-          <el-radio-group v-model="imageSettings.align">
-            <el-radio label="left">左对齐</el-radio>
-            <el-radio label="center">居中</el-radio>
-            <el-radio label="right">右对齐</el-radio>
+          <el-radio-group v-model="imageSettings.align" size="small">
+            <el-radio-button label="left">
+              <Icon icon="mdi:format-align-left" />
+            </el-radio-button>
+            <el-radio-button label="center">
+              <Icon icon="mdi:format-align-center" />
+            </el-radio-button>
+            <el-radio-button label="right">
+              <Icon icon="mdi:format-align-right" />
+            </el-radio-button>
           </el-radio-group>
         </div>
         
         <div class="setting-item">
-          <div class="setting-label">图片边框</div>
+          <div class="setting-label-group">
+            <div class="setting-label">图片边框</div>
+          </div>
           <el-switch
             v-model="imageSettings.border"
-            active-text="显示边框"
-            inactive-text="无边框"
+            inline-prompt
+            active-text="开"
+            inactive-text="关"
           ></el-switch>
         </div>
         
-        <div class="setting-item">
-          <div class="setting-label">圆角大小</div>
+        <div class="setting-item compact" v-if="imageSettings.border">
+          <div class="setting-label-group">
+            <div class="setting-label">圆角大小</div>
+            <div class="setting-value">{{ imageSettings.borderRadius }}px</div>
+          </div>
           <el-slider
             v-model="imageSettings.borderRadius"
             :min="0"
             :max="20"
             :step="1"
-            show-input
-            :disabled="!imageSettings.border"
           ></el-slider>
         </div>
       </div>
       
       <div class="settings-actions">
-        <el-button @click="resetSettings">重置</el-button>
-        <el-button type="primary" @click="saveSettings">保存</el-button>
+        <el-button @click="resetSettings" size="small" plain>重置</el-button>
+        <el-button type="primary" @click="saveSettings" size="small">保存</el-button>
       </div>
     </div>
   </el-drawer>
@@ -116,6 +143,7 @@
 import { ref, reactive, watch } from 'vue'
 import { useEditorStore } from '../stores/editor'
 import { ElMessage } from 'element-plus'
+import { Icon } from '@iconify/vue'
 
 const props = defineProps({
   visible: {
@@ -200,8 +228,16 @@ function resetSettings() {
 </script>
 
 <style scoped>
+:deep(.el-drawer__header) {
+  margin-bottom: 0;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
 .settings-content {
-  padding: 0 20px;
+  padding: 12px 16px;
   height: 100%;
   overflow-y: auto;
   display: flex;
@@ -209,44 +245,92 @@ function resetSettings() {
 }
 
 .setting-section {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 20px;
+  padding-bottom: 16px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-icon {
+  font-size: 18px;
+  color: var(--primary-color);
+  margin-right: 8px;
 }
 
 .section-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  margin-bottom: 16px;
   color: var(--primary-dark);
+  margin: 0;
 }
 
 .setting-item {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+}
+
+.setting-item.compact {
+  margin-bottom: 12px;
 }
 
 .setting-label {
   font-size: 14px;
   color: var(--text-color);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-weight: 500;
+}
+
+.setting-label-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.setting-value {
+  font-size: 12px;
+  color: var(--secondary-color);
 }
 
 .theme-select {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .w-full {
   width: 100%;
 }
 
+:deep(.el-radio-button--small .el-radio-button__inner) {
+  padding: 5px 12px;
+}
+
 .settings-actions {
   margin-top: auto;
-  padding: 20px 0;
+  padding: 16px 0;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+:deep(.el-slider) {
+  width: 100%;
+  margin-top: 4px;
+}
+
+:deep(.el-slider__runway) {
+  margin: 8px 0;
+}
+
+:deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: -1px 0 0 0 var(--primary-color);
 }
 </style> 

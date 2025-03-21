@@ -5,49 +5,49 @@
       <!-- 粗体 -->
       <el-tooltip content="粗体" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="formatText('bold')">
-          <el-icon><Document /></el-icon>
+          <Icon icon="mdi:format-bold" />
         </el-button>
       </el-tooltip>
       
       <!-- 斜体 -->
       <el-tooltip content="斜体" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="formatText('italic')">
-          <el-icon><Edit /></el-icon>
+          <Icon icon="mdi:format-italic" />
         </el-button>
       </el-tooltip>
       
       <!-- 删除线 -->
       <el-tooltip content="删除线" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="formatText('strikethrough')">
-          <el-icon><RemoveFilled /></el-icon>
+          <Icon icon="mdi:format-strikethrough" />
         </el-button>
       </el-tooltip>
       
       <!-- 下划线 -->
       <el-tooltip content="下划线" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="formatText('underline')">
-          <el-icon><Brush /></el-icon>
+          <Icon icon="mdi:format-underline" />
         </el-button>
       </el-tooltip>
       
       <!-- 无序列表 -->
       <el-tooltip content="无序列表" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="formatText('unorderedList')">
-          <el-icon><Operation /></el-icon>
+          <Icon icon="mdi:format-list-bulleted" />
         </el-button>
       </el-tooltip>
       
       <!-- 有序列表 -->
       <el-tooltip content="有序列表" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="formatText('orderedList')">
-          <el-icon><Sort /></el-icon>
+          <Icon icon="mdi:format-list-numbered" />
         </el-button>
       </el-tooltip>
       
       <!-- 引用 -->
       <el-tooltip content="引用" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="formatText('quote')">
-          <el-icon><ChatDotRound /></el-icon>
+          <Icon icon="mdi:format-quote-close" />
         </el-button>
       </el-tooltip>
       
@@ -55,7 +55,7 @@
       <el-tooltip content="标题" placement="top">
         <el-dropdown @command="insertHeading">
           <el-button class="toolbar-button" type="info" plain>
-            <el-icon><MessageBox /></el-icon>
+            <Icon icon="mdi:format-header-pound" />
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
@@ -79,28 +79,28 @@
       <!-- 超链接 -->
       <el-tooltip content="插入链接" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="insertLink">
-          <el-icon><Link /></el-icon>
+          <Icon icon="mdi:link-variant" />
         </el-button>
       </el-tooltip>
       
       <!-- 插入图片 -->
       <el-tooltip content="插入图片" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="insertImage">
-          <el-icon><Picture /></el-icon>
+          <Icon icon="mdi:image" />
         </el-button>
       </el-tooltip>
       
       <!-- 插入表格 -->
       <el-tooltip content="插入表格" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="insertTable">
-          <el-icon><Grid /></el-icon>
+          <Icon icon="mdi:table" />
         </el-button>
       </el-tooltip>
       
       <!-- 插入代码块 -->
       <el-tooltip content="插入代码块" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="insertCodeBlock">
-          <el-icon><Cpu /></el-icon>
+          <Icon icon="mdi:code-braces" />
         </el-button>
       </el-tooltip>
     </div>
@@ -112,19 +112,19 @@
     <div class="action-tools">
       <el-tooltip content="撤销" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="undo">
-          <el-icon><Back /></el-icon>
+          <Icon icon="mdi:undo" />
         </el-button>
       </el-tooltip>
       
       <el-tooltip content="重做" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="redo">
-          <el-icon><Right /></el-icon>
+          <Icon icon="mdi:redo" />
         </el-button>
       </el-tooltip>
       
       <el-tooltip content="清除格式" placement="top">
         <el-button class="toolbar-button" type="info" plain @click="clearFormat">
-          <el-icon><Delete /></el-icon>
+          <Icon icon="mdi:format-clear" />
         </el-button>
       </el-tooltip>
     </div>
@@ -134,24 +134,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useEditorStore } from '../stores/editor'
-import { 
-  Document, 
-  Edit, 
-  Brush,
-  MessageBox, 
-  Operation,
-  RemoveFilled,
-  Sort, 
-  ChatDotRound, 
-  SetUp, 
-  Link, 
-  Picture, 
-  Grid, 
-  Cpu, 
-  Back, 
-  Right, 
-  Delete 
-} from '@element-plus/icons-vue'
+import { Icon } from '@iconify/vue'
 
 const emit = defineEmits(['format'])
 
@@ -232,11 +215,7 @@ function clearFormat() {
   color: #4f46e5;
 }
 
-.toolbar-button :deep(.el-icon) {
-  margin: 0;
-}
-
-:deep(.el-icon) {
-  font-size: 16px;
+.toolbar-button :deep(.iconify) {
+  font-size: 18px;
 }
 </style> 

@@ -1,5 +1,9 @@
 <template>
   <div class="markdown-preview">
+    <!-- <div class="preview-header">
+      <Icon icon="mdi:eye" class="preview-icon" />
+      <span class="preview-title">预览</span>
+    </div> -->
     <div 
       class="preview-content" 
       v-html="renderedContent"
@@ -15,6 +19,7 @@ import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import { useEditorStore } from '../stores/editor'
+import { Icon } from '@iconify/vue'
 
 const props = defineProps({
   content: {
@@ -91,11 +96,25 @@ watch(() => editorStore.codeTheme, (newTheme) => {
 
 <style>
 .markdown-preview {
-  @apply h-full overflow-auto p-4;
+  @apply h-full overflow-auto;
+}
+
+.preview-header {
+  @apply flex items-center px-4 py-2 border-b border-gray-200 bg-gray-50;
+}
+
+.preview-icon {
+  @apply text-lg mr-2;
+  color: var(--primary-color);
+}
+
+.preview-title {
+  @apply font-medium text-sm;
+  color: var(--text-color);
 }
 
 .preview-content {
-  @apply max-w-3xl mx-auto;
+  @apply max-w-3xl mx-auto p-4;
   word-break: break-word;
 }
 

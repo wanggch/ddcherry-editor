@@ -6,14 +6,14 @@
     <div class="actions">
       <el-tooltip content="复制HTML内容" placement="top">
         <el-button type="primary" @click="copyHtml" size="default">
-          <el-icon><Document /></el-icon>
+          <Icon icon="mdi:content-copy" class="mr-1" />
           复制
         </el-button>
       </el-tooltip>
       
       <el-tooltip content="设置" placement="top">
         <el-button type="info" @click="openSettings" size="default">
-          <el-icon><Setting /></el-icon>
+          <Icon icon="mdi:cog" class="mr-1" />
           设置
         </el-button>
       </el-tooltip>
@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import copy from 'clipboard-copy'
 import { ElMessage } from 'element-plus'
+import { Icon } from '@iconify/vue'
 
 const emit = defineEmits(['open-settings'])
 
@@ -113,5 +114,10 @@ function openSettings() {
   background-color: var(--primary-light);
   border-color: var(--primary-light);
   color: var(--primary-dark);
+}
+
+:deep(.iconify) {
+  font-size: 16px;
+  vertical-align: -0.125em;
 }
 </style> 
