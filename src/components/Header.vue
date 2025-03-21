@@ -36,8 +36,18 @@ function copyHtml() {
       return
     }
     
-    const cleanHtml = cleanHtmlForWechat(previewContent.innerHTML)
-    copy(cleanHtml)
+    // 复制HTML内容
+    // const cleanHtml = cleanHtmlForWechat(previewContent.innerHTML)
+    // copy(cleanHtml)
+    // 微信公众号格式
+    previewContent.focus()
+    const range = document.createRange()
+    range.setStartBefore(previewContent.firstChild!)
+    range.setEndAfter(previewContent.lastChild!)
+    window.getSelection()!.addRange(range)
+    document.execCommand('copy')
+    window.getSelection()!.removeAllRanges()
+    
     ElMessage.success('HTML内容已复制到剪贴板，可直接粘贴到微信公众号')
   } catch (error) {
     ElMessage.error('复制失败，请重试')
