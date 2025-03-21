@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { Codemirror } from 'vue-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { oneDark } from '@codemirror/theme-one-dark'
@@ -55,12 +55,18 @@ const extensions = [
   oneDark
 ]
 
-// 当编辑内容更新时
+/**
+ * 当编辑内容更新时触发
+ * @param value 编辑器当前内容
+ */
 function handleUpdate(value: string) {
   emit('update:modelValue', value)
 }
 
-// 处理工具栏格式化命令
+/**
+ * 处理工具栏格式化命令
+ * @param command 格式化命令对象 
+ */
 function handleFormat(command: any) {
   if (!editorView.value) return
   
@@ -158,15 +164,46 @@ function handleFormat(command: any) {
   })
 }
 
-// 当组件挂载时，获取编辑器视图引用
+// 监听props中的modelValue变化，确保编辑器内容与父组件同步
+watch(() => props.modelValue, (newValue) => {
+  // 检查编辑器实例是否存在，并且内容是否与当前值不同
+  if (editorView.value && editorView.value.state.doc.toString() !== newValue) {
+    // 更新编辑器内容
+    editorView.value.dispatch({
+      changes: {
+        from: 0,
+        to: editorView.value.state.doc.length,
+        insert: newValue
+      }
+    })
+  }
+}, { immediate: true })
+
+/**
+ * 在组件挂载后获取编辑器实例并确保内容正确加载
+ */
 onMounted(() => {
-  // 通过DOM获取CodeMirror实例
+  // 延迟一会儿确保DOM已渲染
   setTimeout(() => {
+    // 通过DOM获取CodeMirror实例
     const editorElement = document.querySelector('.cm-editor') as HTMLElement
     if (editorElement) {
       const view = EditorView.findFromDOM(editorElement)
       if (view) {
         editorView.value = view
+        
+        // 检查编辑器内容是否为空，而props.modelValue有值
+        const currentContent = view.state.doc.toString()
+        if (currentContent === '' && props.modelValue) {
+          // 设置编辑器内容
+          view.dispatch({
+            changes: {
+              from: 0,
+              to: view.state.doc.length,
+              insert: props.modelValue
+            }
+          })
+        }
       }
     }
   }, 100)

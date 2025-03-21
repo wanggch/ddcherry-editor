@@ -18,143 +18,74 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useEditorStore } from './stores/editor'
 import Header from './components/Header.vue'
 import MarkdownEditor from './components/MarkdownEditor.vue'
 import MarkdownPreview from './components/MarkdownPreview.vue'
 import SettingsDrawer from './components/SettingsDrawer.vue'
 
+// 初始化编辑器存储
 const editorStore = useEditorStore()
 const settingsVisible = ref(false)
 
-// 编辑器内容双向绑定
-const markdownContent = ref('')
+// 编辑器内容双向绑定 - 从 editorStore 获取初始值
+const markdownContent = ref(editorStore.markdownContent)
 
 // 自动保存的定时器
 let autoSaveTimer: number | null = null
 
-// 更新编辑器内容
+/**
+ * 更新编辑器内容
+ * 当用户在编辑器中输入内容时，此函数会被调用
+ */
 function updateContent(newValue: string) {
   markdownContent.value = newValue
 }
 
-// 自动保存功能
+/**
+ * 自动保存功能
+ * 将当前编辑器内容保存到localStorage
+ */
 function autoSave() {
   if (markdownContent.value) {
     localStorage.setItem('markdownContent', markdownContent.value)
   }
 }
 
-// 设置自动保存
+/**
+ * 设置自动保存定时器
+ * 每隔一段时间自动保存当前编辑内容
+ */
 function setupAutoSave() {
   autoSaveTimer = window.setInterval(() => {
     autoSave()
   }, 5000) // 每5秒保存一次
 }
 
-// 从localStorage加载内容
-function loadFromLocalStorage() {
-  const savedContent = localStorage.getItem('markdownContent')
-  if (savedContent) {
-    markdownContent.value = savedContent
-  } else {
-    markdownContent.value = getDefaultContent()
-  }
-}
-
-// 默认的Markdown内容
-function getDefaultContent() {
-  return `# Markdown 使用指南
-
-## 基本语法
-
-### 1. 标题
-
-使用 # 号可表示 1-6 级标题，一级标题对应一个 # 号，二级标题对应两个 # 号，以此类推。
-
-# 一级标题
-## 二级标题
-### 三级标题
-#### 四级标题
-##### 五级标题
-###### 六级标题
-
-### 2. 强调
-
-**粗体**：在文字两端加上 ** 或 __
-*斜体*：在文字两端加上 * 或 _
-~~删除线~~：在文字两端加上 ~~
-<u>下划线</u>：使用 <u>下划线内容</u>
-
-### 3. 列表
-
-无序列表使用 - 或 * 或 + 作为列表标记：
-
-- 第一项
-- 第二项
-- 第三项
-
-有序列表使用数字并加上 . 号来表示：
-
-1. 第一项
-2. 第二项
-3. 第三项
-
-### 4. 引用
-
-> 这是一个引用示例
-> 
-> 多行引用
-
-### 5. 链接和图片
-
-[链接名称](链接地址)
-![图片alt](图片地址)
-
-例如：[微信公众平台](https://mp.weixin.qq.com/)
-
-### 6. 表格
-
-| 表头1 | 表头2 | 表头3 |
-| ----- | ----- | ----- |
-| 单元格1 | 单元格2 | 单元格3 |
-| 单元格4 | 单元格5 | 单元格6 |
-
-### 7. 代码
-
-行内代码：\`code\`
-
-代码块：
-\`\`\`javascript
-function hello() {
-  console.log('Hello World!');
-}
-\`\`\`
-
-## 微信公众号排版建议
-
-1. 适当使用标题、加粗等强调效果
-2. 控制图片大小，保持页面整洁
-3. 使用引用突出重要内容
-4. 使用列表让文章结构更清晰
-5. 适当使用表格整理数据
-
-祝您使用愉快！`
-}
-
-// 监听内容变化
-watch(markdownContent, (newContent) => {
-  editorStore.setMarkdownContent(newContent)
-})
-
+/**
+ * 打开设置面板
+ */
 function openSettings() {
   settingsVisible.value = true
 }
 
-// 组件挂载时加载内容并设置自动保存
+// 监听内容变化，同步到编辑器存储
+watch(markdownContent, (newContent) => {
+  editorStore.setMarkdownContent(newContent)
+})
+
+// 组件挂载时设置自动保存
 onMounted(() => {
-  loadFromLocalStorage()
+  // 确保内容已从store中加载
+  nextTick(() => {
+    // 如果编辑器内容为空，但store中有内容，则使用store中的内容
+    if (!markdownContent.value && editorStore.markdownContent) {
+      markdownContent.value = editorStore.markdownContent
+    }
+  })
+  
+  // 设置自动保存
   setupAutoSave()
 })
 
